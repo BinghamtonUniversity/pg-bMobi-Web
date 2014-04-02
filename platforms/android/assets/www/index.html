@@ -1,0 +1,35 @@
+<html>
+<head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+
+    // Wait for PhoneGap to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var element = document.getElementById('deviceProperties');
+
+        element.innerHTML = 'Device Name: '     + device.name     + '<br />' + 
+                            'Device PhoneGap: ' + device.phonegap + '<br />' + 
+                            'Device Platform: ' + device.platform + '<br />' + 
+                            'Device UUID: '     + device.uuid     + '<br />' + 
+                            'Device Version: '  + device.version  + '<br />';
+    }
+
+    function gotoHome() {
+    	//document.location = 'http://topaz.binghamton.edu/mobile14/';
+    }
+
+    </script>
+	<title>Binghamton Mobile</title>
+</head>
+<body>
+	<p id="deviceProperties">Loading device properties...</p>
+	<p>meta http-equiv="refresh" content="0;URL='http://topaz.binghamton.edu/mobile14/'"</p>
+	<p><a href="javascript:onDeviceReady()">test</a>
+</body>
+<script src="phonegap.js"></script>
+</html>

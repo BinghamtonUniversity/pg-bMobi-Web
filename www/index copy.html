@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title>bMobi</title>
+    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/slidebars.min.css">
+    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/menu.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+    <div class="menu-button sb-toggle-right">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+    </div>
+
+
+	<div id="content">
+        <p id="deviceProperties">Loading device properties...</p>
+        <p><a href="javascript:onDeviceReady()">Reload Device</a>   
+        <p><a href="http://topaz.binghamton.edu/mobile14/index.php/directory/personProfile?id=DA2B7113F3764131D8EE09671D0EDD64">Start Heres</a>
+        <p><a href="http://topaz.binghamton.edu/mobile14/index.php/directory/">Go There</a> 
+    </div>
+
+    <div class="sb-slidebar sb-right sb-style-push">
+        <nav role="navigation">
+            <img class="logo" src="http://www.binghamton.edu/images/v2/binghamton-university-logo.png" alt="thumbnail" />
+            <ul>
+                <li><a class="sb-disable-close sb-close" href="http://topaz.binghamton.edu/mobile14/index.php/directory/">Directory</a></li>
+                <li><a class="sb-disable-close sb-close" href="#">Calendar</a></li>
+                <li><a class="sb-disable-close sb-close" href="#">Athletics</a></li>
+                <li><a class="sb-disable-close sb-close" href="#">Class Schedule</a></li>
+                <li><a class="sb-disable-close sb-close" href="#">News</a></li>
+                <li><a class="sb-disable-close sb-close" href="#">Transportation</a></li>
+            </ul>
+        </nav>      
+    </div>
+
+<script src="http://topaz.binghamton.edu/mobile14/js/main.js"></script>
+<script src="http://topaz.binghamton.edu/mobile14/js/slidebars.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // setup slideBars
+        var mySlidebars = new $.slidebars();
+        
+        // load content within the "content" div
+        setupLoader();
+    });
+
+    function setupLoader () {
+        // force any links to load within the "content" div
+        $("a").click(function(){
+            var getURL = $(this).attr('href');
+            $('#content').load(getURL, setupLoader);
+            return false;
+        });
+
+        /*  force any forms to load within the "content" div
+            note: using get or post doesn't work due to cross-site origin policies
+            that's why we're serializing the form and forcing a load of the "get" URL
+        */
+
+        $("form").submit(function( event ) {
+            var data    = $(this).serializeArray();
+            var action  = $(this).attr('action');
+            var qstring = jQuery.param(data);
+            var getURL  = action + "?" + qstring;
+            $('#content').load(getURL, setupLoader);
+            return false;
+        });
+    }
+</script> 
+<script src="phonegap.js"></script>
+</body>
+</html>
