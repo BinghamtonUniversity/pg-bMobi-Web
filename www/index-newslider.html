@@ -3,38 +3,36 @@
 	<title>bMobi</title>
     <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/normalize.css" />
     <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/main.css" />
-    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/slidebars.min.css">
+    <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/slidebars.min0.css">
     <link rel="stylesheet" type="text/css" href="http://topaz.binghamton.edu/mobile14/css/menu.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="phonegap.js"></script>
 </head>
 <body>
-    <div class="menubar">
-    <div class="menu-button sb-toggle-right">
-        <div class="menu-line"></div>
-        <div class="menu-line"></div>
-        <div class="menu-line"></div>
-    </div>
-    </div>
 
-	<div id="content">
+    <div id="page">
+        <div id="menubar">
+            <div id="button" class="menu-button sb-toggle-right">
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+            </div>
+        </div>
+    <div id="content">
         <p id="deviceProperties">Loading device properties...</p>
         <p><a href="javascript:onDeviceReady()">Reload Device</a></p>
-        <p>Direct Link:<a href="http://topaz.binghamton.edu/mobile14/index.php/directory/">Directory</a></p>    
-        <p><a href="index-newslider.html">new</a></p>
-
+        <p><a href="http://topaz.binghamton.edu/mobile14/index.php/directory/">Directory</a></p>
+    </div>
     </div>
 
-    <div class="sb-slidebar sb-right sb-style-push">
+    <div id="menu">
         <nav role="navigation">
-            <!--
             <img class="logo" src="http://www.binghamton.edu/images/v2/binghamton-university-logo.png" alt="thumbnail" />
             <ul class="nonlink">
                 <li class="sb-close" data-app="directory">Directory</li>
                 <li class="sb-close" data-app="maps">Maps</li>
+                <li class="sb-close" data-app="maps">Maps</li>
             </ul>
-            -->
             <ul>
                 <li><a class="sb-disable-close sb-close" data-app="directory" href="http://topaz.binghamton.edu/mobile14/index.php/directory/">Directory</a></li>
                 <li><a class="sb-disable-close sb-close" href="#">Calendar</a></li>
@@ -46,13 +44,98 @@
         </nav>      
     </div>
 
-<script src="http://topaz.binghamton.edu/mobile14/js/main.js"></script>
-<script src="http://topaz.binghamton.edu/mobile14/js/slidebars.js"></script>
+<style>
+#menubar {
+    width:100%;
+    background-color:#444;
+    color: #fff;
+    padding: 10px;
+}
+
+#button {
+    cursor:pointer;
+}
+
+#menu, #content {
+    display:inline;
+}
+
+#menu li a {
+    padding: 10px;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+#page6 {
+    width:100%;
+    background-color: #fff;
+    z-indsex: 5;
+    position: fixed;
+    left: 0px;
+    height: 100%;
+    -webkit-box-shadow:  -5px 0px 4px 0px rgba(0, 0, 0, 0.2);
+        moz-box-shadow:  -5px 0px 4px 0px rgba(0, 0, 0, 0.2);
+          o-box-shadow:  -5px 0px 4px 0px rgba(0, 0, 0, 0.2);
+            box-shadow:  -5px 0px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+#page6 p {
+    padding: 10px;
+}
+
+#menu {
+    position: fixed;
+    width: 150px;
+    height: 100%;
+    right: -150px;
+}
+
+#menu li {
+    background-color:#444;
+    border-bottom: 1px solid #888;
+}
+</style>
+<script src="http://topaz.binghamton.edu/mobile14/js/main.js0"></script>
+<script src="http://topaz.binghamton.edu/mobile14/js/slidebars.min.js0"></script>
 <script>
+
+$.fn.clicktoggle = function(a,b){
+    return this.each(function(){
+        var clicked = false;
+        $(this).bind("click",function(){
+            if (clicked) {
+                clicked = false;
+                return b.apply(this,arguments);
+            }
+            clicked = true;
+            return a.apply(this,arguments);
+        });
+    });
+};
+
+
+// now you can use it elsewhere in place of existing .toggle
+//$("#mydiv").clicktoggle(0,1);
+
+
     $(document).ready(function() {
         // setup slideBars
-        var mySlidebars = new $.slidebars();
+        //var mySlidebars = new $.slidebars();
+
         
+$('#button').clicktoggle(
+    function() {
+        $('#menu').animate({ right: 0 }, 'slow', function() {
+            //$('#button').html('Close');
+        });
+    }, 
+    function() {
+        $('#menu').animate({ right: -150 }, 'slow', function() {
+           // $('#button').html('Menu');
+        });
+    }
+);
         // load content within the "content" div
         setupLoader();
 
@@ -73,22 +156,20 @@
             return false;
         });
 
-        /*  
-            force any forms to load within the "content" div
+        /*  force any forms to load within the "content" div
             note: using get or post doesn't work due to cross-site origin policies
             that's why we're serializing the form and forcing a load of the "get" URL
         */
 
         $("form").submit(function( event ) {
             var data    = $(this).serializeArray();
-            var getURL  = $(this).attr('action') + "?" + jQuery.param(data);
+            var action  = $(this).attr('action');
+            var qstring = jQuery.param(data);
+            var getURL  = action + "?" + qstring;
             $('#content').load(getURL, setupLoader);
             return false;
         });
     }
 </script> 
-<style>
-
-</style>
 </body>
 </html>
